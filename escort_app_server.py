@@ -5,6 +5,33 @@ PORT_NUMBER = 50008
 
 # This class will handle any incoming request from
 # a browser 
+
+class pennappserver():
+
+    # init maps 
+    def __init__(self): 
+        self.user2pw = {}
+        self.hash2user = {}
+        self.hash2info = {}
+        self.hash2loc = {}
+        self.pendreq2loc = {}
+        self.esc2stu = {}
+
+    def start(self):
+
+        try:
+            # Create a web server and define the handler to manage the
+            # incoming request
+            server = HTTPServer(('', PORT_NUMBER), myHandler)
+            print ('Started httpserver on port ' , PORT_NUMBER)
+
+            # Wait forever for incoming http requests
+            server.serve_forever()
+
+        except KeyboardInterrupt:
+            print ('^C received, shutting down the web server')
+            server.socket.close()
+
 class myHandler(BaseHTTPRequestHandler):
 
     # Handler for the GET requests
@@ -19,18 +46,9 @@ class myHandler(BaseHTTPRequestHandler):
         self.wfile.write(bytes("Hello World !", "utf-8"))
         return
 
-try:
-    # Create a web server and define the handler to manage the
-    # incoming request
-    server = HTTPServer(('', PORT_NUMBER), myHandler)
-    print ('Started httpserver on port ' , PORT_NUMBER)
+server = pennappserver()
+server.start()
 
-    # Wait forever for incoming http requests
-    server.serve_forever()
-
-except KeyboardInterrupt:
-    print ('^C received, shutting down the web server')
-    server.socket.close()
 
 
 
