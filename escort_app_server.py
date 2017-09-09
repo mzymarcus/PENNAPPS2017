@@ -25,21 +25,27 @@ class pennappserver():
 class myHandler(BaseHTTPRequestHandler):
 
     user2pw = {}
+    user2pw = {"gavin": "123", "dalige": "123", "mage": "123", "wuwang": "123"}
+
     hash2user = {}
+
+    user2hash = {}
+
     hash2info = {}
     hash2loc = {}
     pendreq2loc = {}
     stu2sec = {}
 
     def parse(self, raw_request):
-        return raw_request.split("`")
+        return raw_request.split("!")
 
     def reply(self, response):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
-        response = "`".join(response)
+        response = "!".join(response)
+        print("response:" + response)
 
         # Send the html message
         self.wfile.write(bytes(response, "utf-8"))
@@ -47,38 +53,45 @@ class myHandler(BaseHTTPRequestHandler):
     def process(self, request):
         response = []
 
+        print(request)
+
         if request[0] == "1":
-            # 1`username`password
+            # 1 username password
 
+            print("enter 1...")
             username = request[1]
-            password = request[2]
-            hash_id = self.hash_function(username)
+            typed_password = request[2]
 
-            self.user2pw[username] = password
-            self.hash2user[hash_id] = username
+            if(username in self.user2pw and typed_password == self.user2pw[username]):
+                hash_id = self.hash_function(username)
+                self.hash2user[hash_id] = username
+                response.append(hash_id)
+
+            else:
+                response.append("user not exists or password not match")
 
             self.print_map(self.user2pw, "user2pw")
             self.print_map(self.hash2user, "hash2user")
-
-            response.append(hash_id)
 
         elif request[0] == "2":
-            # 2`username`password
+            # 2 username password
 
             username = request[1]
-            password = request[2]
-            hash_id = self.hash_function(username)
+            typed_password = request[2]
 
-            self.user2pw[username] = password
-            self.hash2user[hash_id] = username
+            if(username in self.user2pw and typed_password == self.user2pw[username]):
+                hash_id = self.hash_function(username)
+                self.hash2user[hash_id] = username
+                response.append(hash_id)
+
+            else:
+                response.append("user not exists or password not match")
 
             self.print_map(self.user2pw, "user2pw")
             self.print_map(self.hash2user, "hash2user")
 
-            response.append(hash_id)
-
         elif request[0] == "3":
-            # 3`hash_id`location
+            # 3 hash_id location
 
             hash_id = request[1]
             location = request[2]
@@ -89,13 +102,17 @@ class myHandler(BaseHTTPRequestHandler):
             self.print_map(hash2loc, "hash2loc")
             self.print_map(pendreq2loc, "pendreq2loc")
 
-            response.append("YES")
+            response.append("received")
 
         elif request[0] == "5":
+            # 5 stu_hash_id sec_hash_id
+
             student_hash_id = request[1]
             security_hash_id = request[2]
+
             print("request %s, stu_id=%s, sec_id=%s" %
                   (5, student_hash_id, security_hash_id))
+
             if student_hash_id in self.pendreq2loc:
                 del self.pendreq2loc[student_hash_id]
                 self.stu2sec[student_hash_id] = [security_hash_id, False]
@@ -108,13 +125,22 @@ class myHandler(BaseHTTPRequestHandler):
             self.stu2sec[student_hash_id][1] = True
 
         elif request[0] == "7":
-            # 7`hash_id`location
+            # 7!hash_id!location
             hash_id = request[1]
             location = request[2]
 
             hash2loc[hash_id] = location
             self.print_map(self.hash2loc, "hash2loc")
             response.append("YES")
+
+            # STUDENT: INIT, REPLY YES
+            # STUDENT: WAITING, REPLY SECURITY PROFILE
+            # STUDENT: CONFIRMED, REPLY SECURITY LOCATION
+
+            # SECURITY: INIT, REPLY PENDING REQUEST
+            # SECURITY: CONFIRMED, REPLY YES
+
+            if()
 
         elif request[0] == "8":
             for student_hash_id in self.pendreq2loc:
@@ -140,7 +166,7 @@ class myHandler(BaseHTTPRequestHandler):
         print('Get request received')
         print('request: ' + self.path)
 
-        request = self.parse(self.path)
+        request = self.parse(self.path[1:])
         response = self.process(request)
         self.reply(response)
         return
