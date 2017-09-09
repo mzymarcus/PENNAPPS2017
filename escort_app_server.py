@@ -44,10 +44,16 @@ class myHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
         response = "!".join(response)
-        print("response:" + response)
+        print("response:", response)
 
         # Send the html message
         self.wfile.write(bytes(response, "utf-8"))
+
+        print("hash2user:", hash2user)
+        print("user2info:", user2info)
+        print("hash2loc:", hash2loc)
+        print("pendreq2loc:", pendreq2loc)
+        print("stu2sec:", stu2sec)
 
     def process(self, request):
         response = []
@@ -171,7 +177,7 @@ class myHandler(BaseHTTPRequestHandler):
     # Handler requests
     def do_GET(self):
         print('Get request received')
-        print('request: ' + self.path)
+        print('request:', self.path)
 
         request = self.parse(self.path[1:])
         response, reply_code = self.process(request)
