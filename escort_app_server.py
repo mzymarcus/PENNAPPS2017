@@ -96,7 +96,11 @@ class myHandler(BaseHTTPRequestHandler):
             if student_hash_id in self.pendreq2loc:
                 del self.pendreq2loc[student_hash_id]
                 self.stu2sec[student_hash_id] = [security_hash_id, False]
-                response.append("Yes")
+                student_username = self.hash2user[student_hash_id]
+                student_info = self.user2info[student_username]
+                security_location = self.hash2loc[security_hash_id]
+                response.append(student_info)
+                response.append(security_location)
             else:
                 response.append("No")
                 reply_code = 400
@@ -113,6 +117,7 @@ class myHandler(BaseHTTPRequestHandler):
             hash_id = request[1]
             location = request[2]
             username = self.hash2user[hash_id]
+            self.hash2loc[hash_id] = location
 
             if self.user2info[username]["type"] == "student":
                 # security: confirmed: 
@@ -123,9 +128,12 @@ class myHandler(BaseHTTPRequestHandler):
                     security_info = str(self.user2info[security_username])
                     security_location = str(self.hash2loc[security_hash_id])
                     response.append(security_info)
-                    response.append(security_location)
+                    response.append("10")
+                else:
+                    reply_code = 400
+                    response.append("No")
 
-            if self.user2info[username]["type"] == "security":
+            elif self.user2info[username]["type"] == "security":
                 # whether paired
                 confirmed = False
                 for student_hash_id in self.stu2sec:
@@ -139,6 +147,9 @@ class myHandler(BaseHTTPRequestHandler):
                         pickup_location = self.pendreq2loc[student_hash_id]
                         response.append(student_hash_id)
                         response.append(pickup_location)
+
+            else:
+                response.append("Yes")
 
         elif request[0] == "8":
             for student_hash_id in self.pendreq2loc:
