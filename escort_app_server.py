@@ -32,6 +32,7 @@ class myHandler(BaseHTTPRequestHandler):
     user2hash = {}
 
     hash2info = {}
+    
     hash2loc = {}
     pendreq2loc = {}
     stu2sec = {}
