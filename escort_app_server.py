@@ -32,7 +32,7 @@ class myHandler(BaseHTTPRequestHandler):
         self.hash2info = {}
         self.hash2loc = {}
         self.pendreq2loc = {}
-        self.esc2stu = {}
+        self.stu2sec = {}
 
     def parse(self, raw_request):
         return raw_request.split("`")
@@ -42,10 +42,12 @@ class myHandler(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
+        "`".join(response)
         # Send the html message
         self.wfile.write(bytes(response, "utf-8"))
 
     def process(self, request):
+        response = []
         if request[0] == 1:
             # 1`username`password
             self.user2pw[request[1]] = request[2]
@@ -61,12 +63,17 @@ class myHandler(BaseHTTPRequestHandler):
             # 3`hash`location
             hash_id = request[1]
             location = request[2]
-            self.
 
-        elif request[0] == 4:
-            pass
         elif request[0] == 5:
-            pass
+            student_hash_id = request[1]
+            security_hash_id = request[2]
+            if student_hash_id in self.pendreq2loc:
+                del self.pendreq2loc[student_hash_id]
+                self.stu2sec[student_hash_id] = security_hash_id
+
+                response.append("Yes")
+            else:
+                response.append("No")
         elif request[0] == 6:
             pass
         elif request[0] == 7:
