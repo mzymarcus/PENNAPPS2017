@@ -77,7 +77,7 @@ class myHandler(BaseHTTPRequestHandler):
 
             response.append(hash_id)
 
-        elif request[0] == "3": 
+        elif request[0] == "3":
             # 3`hash_id`location
 
             hash_id = request[1]
@@ -90,20 +90,26 @@ class myHandler(BaseHTTPRequestHandler):
         elif request[0] == "5":
             student_hash_id = request[1]
             security_hash_id = request[2]
+            print("request %s, stu_id=%s, sec_id=%s" %
+                  (5, student_hash_id, security_hash_id))
             if student_hash_id in self.pendreq2loc:
                 del self.pendreq2loc[student_hash_id]
-                self.stu2sec[student_hash_id] = security_hash_id
+                self.stu2sec[student_hash_id] = [security_hash_id, False]
 
                 response.append("Yes")
             else:
                 response.append("No")
-
+        
         elif request[0] == "6":
-            pass
+            student_hash_id = request[1]
+            self.stu2sec[student_hash_id][1] = True
         elif request[0] == "7":
             pass
         elif request[0] == "8":
-            pass
+            for student_hash_id in self.pendreq2loc:
+                pickup_location = self.pendreq2loc[student_hash_id]
+                response.append(student_hash_id)
+                response.append(pickup_location)
         else:
             pass
 
@@ -130,8 +136,3 @@ class myHandler(BaseHTTPRequestHandler):
 
 server = pennappserver()
 server.start()
-
-
-
-
-
