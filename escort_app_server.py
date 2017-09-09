@@ -24,15 +24,6 @@ class pennappserver():
 
 class myHandler(BaseHTTPRequestHandler):
 
-    # # init maps
-    # def __init__(self, *args):
-    # self.user2pw = {}
-    # self.hash2user = {}
-    # self.hash2info = {}
-    # self.hash2loc = {}
-    # self.pendreq2loc = {}
-    # self.stu2sec = {}  
-
     user2pw = {}
     hash2user = {}
     hash2info = {}
@@ -56,8 +47,9 @@ class myHandler(BaseHTTPRequestHandler):
     def process(self, request):
         response = []
 
-        if request[0] == str(1):
+        if request[0] == "1":
             # 1`username`password
+
             username = request[1]
             password = request[2]
             hash_id = self.hash_function(username)
@@ -70,11 +62,12 @@ class myHandler(BaseHTTPRequestHandler):
 
             response.append(hash_id)
 
-        elif request[0] == str(2):
+        elif request[0] == "2":
             # 2`username`password
+
             username = request[1]
             password = request[2]
-            hash_id = hash_function(username)
+            hash_id = self.hash_function(username)
 
             self.user2pw[username] = password
             self.hash2user[hash_id] = username
@@ -84,8 +77,9 @@ class myHandler(BaseHTTPRequestHandler):
 
             response.append(hash_id)
 
-        elif request[0] == str(3): 
+        elif request[0] == "3": 
             # 3`hash_id`location
+
             hash_id = request[1]
             location = request[2]
 
@@ -93,7 +87,7 @@ class myHandler(BaseHTTPRequestHandler):
 
             response.append("OK")
 
-        elif request[0] == str(5):
+        elif request[0] == "5":
             student_hash_id = request[1]
             security_hash_id = request[2]
             if student_hash_id in self.pendreq2loc:
@@ -104,11 +98,11 @@ class myHandler(BaseHTTPRequestHandler):
             else:
                 response.append("No")
 
-        elif request[0] == str(6):
+        elif request[0] == "6":
             pass
-        elif request[0] == str(7):
+        elif request[0] == "7":
             pass
-        elif request[0] == str(8):
+        elif request[0] == "8":
             pass
         else:
             pass
@@ -127,7 +121,7 @@ class myHandler(BaseHTTPRequestHandler):
     # Handler requests
     def do_GET(self):
         print('Get request received')
-        print('request:' + self.path)
+        print('request: ' + self.path)
 
         request = self.parse(self.path)
         response = self.process(request)
