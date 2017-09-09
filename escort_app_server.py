@@ -25,7 +25,7 @@ class pennappserver():
 class myHandler(BaseHTTPRequestHandler):
 
     hash2user = {}
-    
+
     # info {username, password, type, picture ...}
     user2info = {"gavin": {"password": "123", "type": "student",},
                  "dalige": {"password": "123", "type": "security",},
@@ -55,7 +55,7 @@ class myHandler(BaseHTTPRequestHandler):
         print(request)
 
         if request[0] == "1" or request[0] == "2":
-            # 1 username password
+            # 1/2!username!password
 
             username = request[1]
             password = request[2]
@@ -69,7 +69,7 @@ class myHandler(BaseHTTPRequestHandler):
                 response.append("No")
 
         elif request[0] == "3":
-            # 3 hash_id location
+            # 3!hash_id!location
 
             hash_id = request[1]
             location = request[2]
@@ -80,10 +80,10 @@ class myHandler(BaseHTTPRequestHandler):
             self.print_map(self.hash2loc, "hash2loc")
             self.print_map(self.pendreq2loc, "pendreq2loc")
 
-            response.append("received")
+            response.append("Yes")
 
         elif request[0] == "5":
-            # 5 stu_hash_id sec_hash_id
+            # 5!stu_hash_id!sec_hash_id
 
             student_hash_id = request[1]
             security_hash_id = request[2]
@@ -99,23 +99,48 @@ class myHandler(BaseHTTPRequestHandler):
                 response.append("No")
         
         elif request[0] == "6":
+            # 6!stu_hash_id
+
             student_hash_id = request[1]
             self.stu2sec[student_hash_id][1] = True
 
         elif request[0] == "7":
             # 7!hash_id!location
-            hash_id = request[1]
-            username = self.hash2user[hash_id]
-            location = request[2]
 
-            if
-            # STUDENT: INIT, REPLY YES
-            # STUDENT: WAITING, REPLY SECURITY PROFILE
-            # STUDENT: CONFIRMED, REPLY SECURITY LOCATION
+            
 
-            # SECURITY: INIT, REPLY PENDING REQUEST
-            # SECURITY: CONFIRMED, REPLY YES
+            if self.user2info[student_username]["type"] = "student":
+                # security: confirmed: 
 
+                student_hash_id = request[1]
+                student_location = request[2]
+                student_username = self.hash2user[hash_id]
+
+                if student_hash_id in self.stu2sec:
+                    security_hash_id = self.stu2sec[student_hash_id]
+                    security_username = self.hash2user[security_hash_id]
+                    security_info = str(self.user2info[security_username])
+                    security_location = str(self.hash2loc[security_hash_id])
+                    response.append(security_info)
+                    response.append(security_location)
+
+            if self.user2info[username]["type"] = "security":
+                # whether paired
+
+                security_hash_id = request[1]
+                security_location = request[2]
+                security_username = self.hash2user[hash_id]
+
+                for student_hash_id in self.stu2sec:
+                    tmp_security_hash_id = self.stu2sec[student_hash_id]
+                    if tmp_security_hash_id == security_hash_id:
+                        response.append("Yes")
+
+                if "Yes" in response:
+                    for student_hash_id in self.pendreq2loc:
+                        pickup_location = self.pendreq2loc[student_hash_id]
+                        response.append(student_hash_id)
+                        response.append(pickup_location)
 
 
         elif request[0] == "8":
