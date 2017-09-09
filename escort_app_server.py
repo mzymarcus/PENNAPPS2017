@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import time
+import hashlib
 
 PORT_NUMBER = 50008
 
@@ -46,11 +47,22 @@ class myHandler(BaseHTTPRequestHandler):
 
     def process(self, request):
         if request[0] == 1:
-            pass
+            # 1`username`password
+            self.user2pw[request[1]] = request[2]
+            print_map(self.user2pw, "user2pw")
+            
+
         elif request[0] == 2:
-            pass
-        elif request[0] == 3:
-            pass
+            # 2`username`password
+            self.user2pw[request[1]] = request[2]
+            print_map(self.user2pw, "user2pw")
+
+        elif request[0] == 3: 
+            # 3`hash`location
+            hash_id = request[1]
+            location = request[2]
+            self.
+
         elif request[0] == 4:
             pass
         elif request[0] == 5:
@@ -63,6 +75,11 @@ class myHandler(BaseHTTPRequestHandler):
             pass
 
         return response
+
+    def print_map(dict_map, map_name):
+        print(map_name + ":")
+        for key in dict_map:
+            print(key + ',' + dict_map[key])
 
     # Handler requests
     def do_GET(self):
