@@ -109,15 +109,16 @@ class myHandler(BaseHTTPRequestHandler):
 
         elif request[0] == "7":
             # 7!hash_id!location
-            if self.user2info[student_username]["type"] == "student":
+
+            hash_id = request[1]
+            location = request[2]
+            username = self.hash2user[hash_id]
+
+            if self.user2info[username]["type"] == "student":
                 # security: confirmed: 
 
-                student_hash_id = request[1]
-                student_location = request[2]
-                student_username = self.hash2user[hash_id]
-
-                if student_hash_id in self.stu2sec:
-                    security_hash_id = self.stu2sec[student_hash_id]
+                if hash_id in self.stu2sec:
+                    security_hash_id = self.stu2sec[hash_id]
                     security_username = self.hash2user[security_hash_id]
                     security_info = str(self.user2info[security_username])
                     security_location = str(self.hash2loc[security_hash_id])
@@ -126,22 +127,18 @@ class myHandler(BaseHTTPRequestHandler):
 
             if self.user2info[username]["type"] == "security":
                 # whether paired
-
-                security_hash_id = request[1]
-                security_location = request[2]
-                security_username = self.hash2user[hash_id]
-
+                confirmed = False
                 for student_hash_id in self.stu2sec:
-                    tmp_security_hash_id = self.stu2sec[student_hash_id]
-                    if tmp_security_hash_id == security_hash_id:
+                    security_hash_id = self.stu2sec[student_hash_id]
+                    if security_hash_id == hash_id:
+                        confirmed = True
                         response.append("Yes")
 
-                if "Yes" in response:
+                if not confirmed:
                     for student_hash_id in self.pendreq2loc:
                         pickup_location = self.pendreq2loc[student_hash_id]
                         response.append(student_hash_id)
                         response.append(pickup_location)
-
 
         elif request[0] == "8":
             for student_hash_id in self.pendreq2loc:
