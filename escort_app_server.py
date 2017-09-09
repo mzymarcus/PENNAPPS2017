@@ -24,14 +24,14 @@ class pennappserver():
 
 class myHandler(BaseHTTPRequestHandler):
 
-    user2pw = {}
     user2pw = {"gavin": "123", "dalige": "123", "mage": "123", "wuwang": "123"}
 
     hash2user = {}
 
-    user2hash = {}
-
-    hash2info = {}
+    # info {username, password, type, picture ...}
+    user2info = {"gavin": {"password": "123", "type": "student",},
+                 "dalige": {"password": "123", "type": "security",},
+                 }
     hash2loc = {}
     pendreq2loc = {}
     stu2sec = {}
@@ -55,40 +55,19 @@ class myHandler(BaseHTTPRequestHandler):
 
         print(request)
 
-        if request[0] == "1":
+        if request[0] == "1" or request[0] == "2":
             # 1 username password
 
-            print("enter 1...")
             username = request[1]
-            typed_password = request[2]
+            password = request[2]
 
-            if(username in self.user2pw and typed_password == self.user2pw[username]):
+            if(username in self.user2info and
+                password == self.user2info[username]["password"]):
                 hash_id = self.hash_function(username)
                 self.hash2user[hash_id] = username
                 response.append(hash_id)
-
             else:
-                response.append("user not exists or password not match")
-
-            self.print_map(self.user2pw, "user2pw")
-            self.print_map(self.hash2user, "hash2user")
-
-        elif request[0] == "2":
-            # 2 username password
-
-            username = request[1]
-            typed_password = request[2]
-
-            if(username in self.user2pw and typed_password == self.user2pw[username]):
-                hash_id = self.hash_function(username)
-                self.hash2user[hash_id] = username
-                response.append(hash_id)
-
-            else:
-                response.append("user not exists or password not match")
-
-            self.print_map(self.user2pw, "user2pw")
-            self.print_map(self.hash2user, "hash2user")
+                response.append("No")
 
         elif request[0] == "3":
             # 3 hash_id location
@@ -99,8 +78,8 @@ class myHandler(BaseHTTPRequestHandler):
             self.hash2loc[hash_id] = location
             self.pendreq2loc[hash_id] = location
 
-            self.print_map(hash2loc, "hash2loc")
-            self.print_map(pendreq2loc, "pendreq2loc")
+            self.print_map(self.hash2loc, "hash2loc")
+            self.print_map(self.pendreq2loc, "pendreq2loc")
 
             response.append("received")
 
@@ -127,12 +106,10 @@ class myHandler(BaseHTTPRequestHandler):
         elif request[0] == "7":
             # 7!hash_id!location
             hash_id = request[1]
+            username = self.hash2user[hash_id]
             location = request[2]
 
-            hash2loc[hash_id] = location
-            self.print_map(self.hash2loc, "hash2loc")
-            response.append("YES")
-
+            if
             # STUDENT: INIT, REPLY YES
             # STUDENT: WAITING, REPLY SECURITY PROFILE
             # STUDENT: CONFIRMED, REPLY SECURITY LOCATION
@@ -140,7 +117,7 @@ class myHandler(BaseHTTPRequestHandler):
             # SECURITY: INIT, REPLY PENDING REQUEST
             # SECURITY: CONFIRMED, REPLY YES
 
-            if()
+
 
         elif request[0] == "8":
             for student_hash_id in self.pendreq2loc:
