@@ -106,14 +106,14 @@ class myHandler(BaseHTTPRequestHandler):
 
         elif request[0] == "7":
             pass
-            
+
         elif request[0] == "8":
             for student_hash_id in self.pendreq2loc:
                 pickup_location = self.pendreq2loc[student_hash_id]
                 response.append(student_hash_id)
                 response.append(pickup_location)
         else:
-            pass
+            pass         
 
         return response
 
