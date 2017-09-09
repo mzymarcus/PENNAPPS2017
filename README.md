@@ -1,5 +1,7 @@
 # PENNAPPS2017
 request from client and corresponding replies:
+
+
     <1> student login request:
             <1><username><password>
         reply:
