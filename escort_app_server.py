@@ -7,18 +7,7 @@ PORT_NUMBER = 50008
 # a browser 
 
 class pennappserver():
-
-    # init maps 
-    def __init__(self): 
-        self.user2pw = {}
-        self.hash2user = {}
-        self.hash2info = {}
-        self.hash2loc = {}
-        self.pendreq2loc = {}
-        self.esc2stu = {}
-
     def start(self):
-
         try:
             # Create a web server and define the handler to manage the
             # incoming request
@@ -34,16 +23,54 @@ class pennappserver():
 
 class myHandler(BaseHTTPRequestHandler):
 
-    # Handler for the GET requests
+
+    # init maps
+    def __init__(self):
+        self.user2pw = {}
+        self.hash2user = {}
+        self.hash2info = {}
+        self.hash2loc = {}
+        self.pendreq2loc = {}
+        self.esc2stu = {}
+
+    def parse(self, raw_request):
+        return raw_request.split("`")
+
+    def reply(self, response):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+
+        # Send the html message
+        self.wfile.write(bytes(response, "utf-8"))
+
+    def process(self, request):
+        if request[0] == 1:
+            pass
+        elif request[0] == 2:
+            pass
+        elif request[0] == 3:
+            pass
+        elif request[0] == 4:
+            pass
+        elif request[0] == 5:
+            pass
+        elif request[0] == 6:
+            pass
+        elif request[0] == 7:
+            pass
+        elif request[0] == 8:
+            pass
+
+        return response
+
+    # Handler requests
     def do_GET(self):
         print('Get request received')
         print('request:' + self.path)
 
-        self.send_response(200)
-        self.send_header('Content-type','text/html')
-        self.end_headers()
-        # Send the html message
-        self.wfile.write(bytes("Hello World !", "utf-8"))
+        request = self.parse(self.path)
+        self.reply(response)
         return
 
 server = pennappserver()
