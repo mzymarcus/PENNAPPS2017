@@ -24,15 +24,21 @@ class pennappserver():
 
 class myHandler(BaseHTTPRequestHandler):
 
+    # # init maps
+    # def __init__(self, *args):
+    # self.user2pw = {}
+    # self.hash2user = {}
+    # self.hash2info = {}
+    # self.hash2loc = {}
+    # self.pendreq2loc = {}
+    # self.stu2sec = {}  
 
-    # init maps
-    def __init__(self):
-        self.user2pw = {}
-        self.hash2user = {}
-        self.hash2info = {}
-        self.hash2loc = {}
-        self.pendreq2loc = {}
-        self.stu2sec = {}
+    user2pw = {}
+    hash2user = {}
+    hash2info = {}
+    hash2loc = {}
+    pendreq2loc = {}
+    stu2sec = {}
 
     def parse(self, raw_request):
         return raw_request.split("`")
@@ -42,29 +48,52 @@ class myHandler(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
-        "`".join(response)
+        response = "`".join(response)
+
         # Send the html message
         self.wfile.write(bytes(response, "utf-8"))
 
     def process(self, request):
         response = []
-        if request[0] == 1:
+
+        if request[0] == str(1):
             # 1`username`password
-            self.user2pw[request[1]] = request[2]
-            print_map(self.user2pw, "user2pw")
-            
+            username = request[1]
+            password = request[2]
+            hash_id = self.hash_function(username)
 
-        elif request[0] == 2:
+            self.user2pw[username] = password
+            self.hash2user[hash_id] = username
+
+            self.print_map(self.user2pw, "user2pw")
+            self.print_map(self.hash2user, "hash2user")
+
+            response.append(hash_id)
+
+        elif request[0] == str(2):
             # 2`username`password
-            self.user2pw[request[1]] = request[2]
-            print_map(self.user2pw, "user2pw")
+            username = request[1]
+            password = request[2]
+            hash_id = hash_function(username)
 
-        elif request[0] == 3: 
-            # 3`hash`location
+            self.user2pw[username] = password
+            self.hash2user[hash_id] = username
+
+            self.print_map(self.user2pw, "user2pw")
+            self.print_map(self.hash2user, "hash2user")
+
+            response.append(hash_id)
+
+        elif request[0] == str(3): 
+            # 3`hash_id`location
             hash_id = request[1]
             location = request[2]
 
-        elif request[0] == 5:
+            self.hash2loc[hash_id] = location
+
+            response.append("OK")
+
+        elif request[0] == str(5):
             student_hash_id = request[1]
             security_hash_id = request[2]
             if student_hash_id in self.pendreq2loc:
@@ -74,16 +103,23 @@ class myHandler(BaseHTTPRequestHandler):
                 response.append("Yes")
             else:
                 response.append("No")
-        elif request[0] == 6:
+
+        elif request[0] == str(6):
             pass
-        elif request[0] == 7:
+        elif request[0] == str(7):
             pass
-        elif request[0] == 8:
+        elif request[0] == str(8):
+            pass
+        else:
             pass
 
         return response
 
-    def print_map(dict_map, map_name):
+    def hash_function(self, username):
+        # return hashlib.md5(username).hexdigest()
+        return username
+
+    def print_map(self, dict_map, map_name):
         print(map_name + ":")
         for key in dict_map:
             print(key + ',' + dict_map[key])
@@ -94,6 +130,7 @@ class myHandler(BaseHTTPRequestHandler):
         print('request:' + self.path)
 
         request = self.parse(self.path)
+        response = self.process(request)
         self.reply(response)
         return
 
