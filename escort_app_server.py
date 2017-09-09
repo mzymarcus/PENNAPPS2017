@@ -146,7 +146,7 @@ class myHandler(BaseHTTPRequestHandler):
                     security_hash_id = self.stu2sec[hash_id][0]
                     security_username = self.hash2user[security_hash_id]
                     security_info = self.user2info[security_username]
-                    security_location = str(self.hash2loc[security_hash_id])
+                    # security_location = str(self.hash2loc[security_hash_id])
 
                     info_to_student = {}
                     info_to_student["name"] = security_info["name"]
