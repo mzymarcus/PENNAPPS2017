@@ -42,43 +42,51 @@ class myHandler(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
-        "`".join(response)
+        response = "`".join(response)
         # Send the html message
         self.wfile.write(bytes(response, "utf-8"))
 
     def process(self, request):
         response = []
-        if request[0] == 1:
+        if request[0] == "1":
             # 1`username`password
             self.user2pw[request[1]] = request[2]
-            print_map(self.user2pw, "user2pw")
+            self.print_map(self.user2pw, "user2pw")
             
 
-        elif request[0] == 2:
+        elif request[0] == "2":
             # 2`username`password
             self.user2pw[request[1]] = request[2]
-            print_map(self.user2pw, "user2pw")
+            self.print_map(self.user2pw, "user2pw")
 
-        elif request[0] == 3: 
+        elif request[0] == "3":
             # 3`hash`location
             hash_id = request[1]
             location = request[2]
 
-        elif request[0] == 5:
+        elif request[0] == "5":
             student_hash_id = request[1]
             security_hash_id = request[2]
+            print("request %s, stu_id=%s, sec_id=%s" %
+                  (5, student_hash_id, security_hash_id))
             if student_hash_id in self.pendreq2loc:
                 del self.pendreq2loc[student_hash_id]
-                self.stu2sec[student_hash_id] = security_hash_id
+                self.stu2sec[student_hash_id] = [security_hash_id, False]
 
                 response.append("Yes")
             else:
                 response.append("No")
-        elif request[0] == 6:
+        elif request[0] == "6":
+            student_hash_id = request[1]
+            self.stu2sec[student_hash_id][1] = True
+        elif request[0] == "7":
             pass
-        elif request[0] == 7:
-            pass
-        elif request[0] == 8:
+        elif request[0] == "8":
+            for student_hash_id in self.pendreq2loc:
+                pickup_location = self.pendreq2loc[student_hash_id]
+                response.append(student_hash_id)
+                response.append(pickup_location)
+        else:
             pass
 
         return response
@@ -94,13 +102,9 @@ class myHandler(BaseHTTPRequestHandler):
         print('request:' + self.path)
 
         request = self.parse(self.path)
+        response = self.process(request)
         self.reply(response)
         return
 
 server = pennappserver()
 server.start()
-
-
-
-
-
