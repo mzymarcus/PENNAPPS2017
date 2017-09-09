@@ -100,9 +100,8 @@ class myHandler(BaseHTTPRequestHandler):
                 student_username = self.hash2user[student_hash_id]
                 student_info = self.user2info[student_username]
                 student_location = self.hash2loc[student_hash_id]
-                response.append(student_info)
+                response.append(str(student_info))
                 response.append(student_location)
-                response.append(eta)
             else:
                 response.append("No")
                 reply_code = 400
@@ -176,6 +175,7 @@ class myHandler(BaseHTTPRequestHandler):
         print("hash2loc:", self.hash2loc)
         print("pendreq2loc:", self.pendreq2loc)
         print("stu2sec:", self.stu2sec)
+        print("\n")
 
         request = self.parse(self.path[1:])
         response, reply_code = self.process(request)
