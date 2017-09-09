@@ -27,8 +27,20 @@ class myHandler(BaseHTTPRequestHandler):
     hash2user = {}
 
     # info {username, password, type, picture ...}
-    user2info = {"gavin": {"password": "123", "type": "student",},
-                 "dalige": {"password": "123", "type": "security",},
+    user2info = {"gavin":
+                     {
+                         "name": "Gavin",
+                         "password": "123",
+                         "type": "student",
+                         "phone": "123456789",
+                     },
+                 "dalige":
+                     {
+                         "name": "Rex",
+                         "password": "123",
+                         "type": "security",
+                         "phone": "123456789",
+                     },
                  }
 
     hash2loc = {}
@@ -102,7 +114,12 @@ class myHandler(BaseHTTPRequestHandler):
                 student_username = self.hash2user[student_hash_id]
                 student_info = self.user2info[student_username]
                 student_location = self.hash2loc[student_hash_id]
-                response.append(str(student_info))
+
+                info_to_security = {}
+                info_to_security["name"] = student_info["name"]
+                info_to_security["phone"] = student_info["phone"]
+
+                response.append(str(info_to_security))
                 response.append(student_location)
             else:
                 response.append("No")
@@ -112,7 +129,7 @@ class myHandler(BaseHTTPRequestHandler):
             # 6!stu_hash_id
 
             student_hash_id = request[1]
-            self.stu2sec[student_hash_id][1] = True
+            del self.stu2sec[student_hash_id]
             response.append("Yes")
 
         elif request[0] == "7":
@@ -128,9 +145,14 @@ class myHandler(BaseHTTPRequestHandler):
                 if hash_id in self.stu2sec:
                     security_hash_id = self.stu2sec[hash_id][0]
                     security_username = self.hash2user[security_hash_id]
-                    security_info = str(self.user2info[security_username])
+                    security_info = self.user2info[security_username]
                     security_location = str(self.hash2loc[security_hash_id])
-                    response.append(security_info)
+
+                    info_to_student = {}
+                    info_to_student["name"] = security_info["name"]
+                    info_to_student["phone"] = security_info["phone"]
+
+                    response.append(str(info_to_student))
                     response.append("10")
                 else:
                     reply_code = 400
