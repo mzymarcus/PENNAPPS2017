@@ -50,6 +50,8 @@ class myHandler(BaseHTTPRequestHandler):
         self.wfile.write(bytes(response, "utf-8"))
         self.wfile.flush()
 
+        return
+
     def process(self, request):
         response = []
         reply_code = 200
