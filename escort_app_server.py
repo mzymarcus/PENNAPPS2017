@@ -38,8 +38,8 @@ class myHandler(BaseHTTPRequestHandler):
     def parse(self, raw_request):
         return raw_request.split("!")
 
-    def reply(self, response):
-        self.send_response(200)
+    def reply(self, reply_code, response):
+        self.send_response(reply_code)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
@@ -51,6 +51,7 @@ class myHandler(BaseHTTPRequestHandler):
 
     def process(self, request):
         response = []
+        reply_code = 200
 
         print(request)
 
@@ -67,6 +68,7 @@ class myHandler(BaseHTTPRequestHandler):
                 response.append(hash_id)
             else:
                 response.append("No")
+                reply_code = 400
 
         elif request[0] == "3":
             # 3!hash_id!location
@@ -97,6 +99,7 @@ class myHandler(BaseHTTPRequestHandler):
                 response.append("Yes")
             else:
                 response.append("No")
+                reply_code = 400
         
         elif request[0] == "6":
             # 6!stu_hash_id
@@ -106,10 +109,7 @@ class myHandler(BaseHTTPRequestHandler):
 
         elif request[0] == "7":
             # 7!hash_id!location
-
-            
-
-            if self.user2info[student_username]["type"] = "student":
+            if self.user2info[student_username]["type"] == "student":
                 # security: confirmed: 
 
                 student_hash_id = request[1]
@@ -124,7 +124,7 @@ class myHandler(BaseHTTPRequestHandler):
                     response.append(security_info)
                     response.append(security_location)
 
-            if self.user2info[username]["type"] = "security":
+            if self.user2info[username]["type"] == "security":
                 # whether paired
 
                 security_hash_id = request[1]
@@ -149,9 +149,10 @@ class myHandler(BaseHTTPRequestHandler):
                 response.append(student_hash_id)
                 response.append(pickup_location)
         else:
-            pass
+            response.append("No")
+            reply_code = 400
 
-        return response
+        return response, reply_code
 
     def hash_function(self, username):
         # return hashlib.md5(username).hexdigest()
@@ -168,8 +169,8 @@ class myHandler(BaseHTTPRequestHandler):
         print('request: ' + self.path)
 
         request = self.parse(self.path[1:])
-        response = self.process(request)
-        self.reply(response)
+        response, reply_code = self.process(request)
+        self.reply(reply_code, response)
         return
 
 server = pennappserver()
