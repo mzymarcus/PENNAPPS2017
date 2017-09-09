@@ -84,8 +84,12 @@ class myHandler(BaseHTTPRequestHandler):
             location = request[2]
 
             self.hash2loc[hash_id] = location
+            self.pendreq2loc[hash_id] = location
 
-            response.append("OK")
+            self.print_map(hash2loc, "hash2loc")
+            self.print_map(pendreq2loc, "pendreq2loc")
+
+            response.append("YES")
 
         elif request[0] == "5":
             student_hash_id = request[1]
@@ -95,7 +99,6 @@ class myHandler(BaseHTTPRequestHandler):
             if student_hash_id in self.pendreq2loc:
                 del self.pendreq2loc[student_hash_id]
                 self.stu2sec[student_hash_id] = [security_hash_id, False]
-
                 response.append("Yes")
             else:
                 response.append("No")
@@ -105,7 +108,13 @@ class myHandler(BaseHTTPRequestHandler):
             self.stu2sec[student_hash_id][1] = True
 
         elif request[0] == "7":
-            pass
+            # 7`hash_id`location
+            hash_id = request[1]
+            location = request[2]
+
+            hash2loc[hash_id] = location
+            self.print_map(self.hash2loc, "hash2loc")
+            response.append("YES")
 
         elif request[0] == "8":
             for student_hash_id in self.pendreq2loc:
