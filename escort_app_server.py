@@ -113,7 +113,7 @@ class myHandler(BaseHTTPRequestHandler):
                 response.append(student_hash_id)
                 response.append(pickup_location)
         else:
-            pass         
+            pass
 
         return response
 
