@@ -48,6 +48,7 @@ class myHandler(BaseHTTPRequestHandler):
 
         # Send the html message
         self.wfile.write(bytes(response, "utf-8"))
+        self.wfile.flush()
 
         print("hash2user:", self.hash2user)
         print("user2info:", self.user2info)
