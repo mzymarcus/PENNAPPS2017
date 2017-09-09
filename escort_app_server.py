@@ -49,11 +49,11 @@ class myHandler(BaseHTTPRequestHandler):
         # Send the html message
         self.wfile.write(bytes(response, "utf-8"))
 
-        print("hash2user:", hash2user)
-        print("user2info:", user2info)
-        print("hash2loc:", hash2loc)
-        print("pendreq2loc:", pendreq2loc)
-        print("stu2sec:", stu2sec)
+        print("hash2user:", self.hash2user)
+        print("user2info:", self.user2info)
+        print("hash2loc:", self.hash2loc)
+        print("pendreq2loc:", self.pendreq2loc)
+        print("stu2sec:", self.stu2sec)
 
     def process(self, request):
         response = []
