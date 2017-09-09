@@ -126,7 +126,7 @@ class myHandler(BaseHTTPRequestHandler):
             if self.user2info[username]["type"] == "student":
                 # security: confirmed:
                 if hash_id in self.stu2sec:
-                    security_hash_id = self.stu2sec[hash_id]
+                    security_hash_id = self.stu2sec[hash_id][0]
                     security_username = self.hash2user[security_hash_id]
                     security_info = str(self.user2info[security_username])
                     security_location = str(self.hash2loc[security_hash_id])
@@ -140,7 +140,7 @@ class myHandler(BaseHTTPRequestHandler):
                 # whether paired
                 confirmed = False
                 for student_hash_id in self.stu2sec:
-                    security_hash_id = self.stu2sec[student_hash_id]
+                    security_hash_id = self.stu2sec[student_hash_id][0]
                     if security_hash_id == hash_id:
                         confirmed = True
                         response.append("Yes")
