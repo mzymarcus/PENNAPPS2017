@@ -82,19 +82,19 @@ class myHandler(BaseHTTPRequestHandler):
             hash_id = request[1]
             location = request[2]
 
-            self.hash2loc[hash_id] = location
-            self.pendreq2loc[hash_id] = location
-
-            self.print_map(self.hash2loc, "hash2loc")
-            self.print_map(self.pendreq2loc, "pendreq2loc")
-
-            response.append("Yes")
+            if hash_id not in self.hash2user:
+                response.append("No")
+            else:
+                self.hash2loc[hash_id] = location
+                self.pendreq2loc[hash_id] = location
+                response.append("Yes")
 
         elif request[0] == "5":
-            # 5!stu_hash_id!sec_hash_id
+            # 5!stu_hash_id!sec_hash_id!ETA
 
             student_hash_id = request[1]
             security_hash_id = request[2]
+            eta = request[3]
 
             print("request %s, stu_id=%s, sec_id=%s" %
                   (5, student_hash_id, security_hash_id))
@@ -104,9 +104,10 @@ class myHandler(BaseHTTPRequestHandler):
                 self.stu2sec[student_hash_id] = [security_hash_id, False]
                 student_username = self.hash2user[student_hash_id]
                 student_info = self.user2info[student_username]
-                security_location = self.hash2loc[security_hash_id]
+                student_location = self.hash2loc[student_hash_id]
                 response.append(student_info)
-                response.append(security_location)
+                response.append(student_location)
+                response.append(eta)
             else:
                 response.append("No")
                 reply_code = 400
@@ -155,6 +156,7 @@ class myHandler(BaseHTTPRequestHandler):
                         response.append(pickup_location)
 
         elif request[0] == "8":
+            # 8
             for student_hash_id in self.pendreq2loc:
                 pickup_location = self.pendreq2loc[student_hash_id]
                 response.append(student_hash_id)
