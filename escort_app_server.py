@@ -105,7 +105,12 @@ class myHandler(BaseHTTPRequestHandler):
             self.stu2sec[student_hash_id][1] = True
 
         elif request[0] == "7":
-            pass
+            # STUDENT: INIT, REPLY YES
+            # STUDENT: WAITING, REPLY SECURITY PROFILE
+            # STUDENT: CONFIRMED, REPLY SECURITY LOCATION
+
+            # SECURITY: INIT, REPLY PENDING REQUEST
+            # SECURITY: CONFIRMED, REPLY YES
 
         elif request[0] == "8":
             for student_hash_id in self.pendreq2loc:
