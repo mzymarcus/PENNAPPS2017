@@ -110,6 +110,7 @@ class myHandler(BaseHTTPRequestHandler):
 
             student_hash_id = request[1]
             self.stu2sec[student_hash_id][1] = True
+            response.append("Yes")
 
         elif request[0] == "7":
             # 7!hash_id!location
@@ -120,8 +121,7 @@ class myHandler(BaseHTTPRequestHandler):
             self.hash2loc[hash_id] = location
 
             if self.user2info[username]["type"] == "student":
-                # security: confirmed: 
-
+                # security: confirmed:
                 if hash_id in self.stu2sec:
                     security_hash_id = self.stu2sec[hash_id]
                     security_username = self.hash2user[security_hash_id]
@@ -147,9 +147,6 @@ class myHandler(BaseHTTPRequestHandler):
                         pickup_location = self.pendreq2loc[student_hash_id]
                         response.append(student_hash_id)
                         response.append(pickup_location)
-
-            else:
-                response.append("Yes")
 
         elif request[0] == "8":
             for student_hash_id in self.pendreq2loc:
