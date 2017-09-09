@@ -50,12 +50,6 @@ class myHandler(BaseHTTPRequestHandler):
         self.wfile.write(bytes(response, "utf-8"))
         self.wfile.flush()
 
-        print("hash2user:", self.hash2user)
-        print("user2info:", self.user2info)
-        print("hash2loc:", self.hash2loc)
-        print("pendreq2loc:", self.pendreq2loc)
-        print("stu2sec:", self.stu2sec)
-
     def process(self, request):
         response = []
         reply_code = 200
@@ -172,15 +166,16 @@ class myHandler(BaseHTTPRequestHandler):
         # return hashlib.md5(username).hexdigest()
         return username
 
-    def print_map(self, dict_map, map_name):
-        print(map_name + ":")
-        for key in dict_map:
-            print(key + ',' + dict_map[key])
-
     # Handler requests
     def do_GET(self):
         print('Get request received')
         print('request:', self.path)
+
+        print("hash2user:", self.hash2user)
+        print("user2info:", self.user2info)
+        print("hash2loc:", self.hash2loc)
+        print("pendreq2loc:", self.pendreq2loc)
+        print("stu2sec:", self.stu2sec)
 
         request = self.parse(self.path[1:])
         response, reply_code = self.process(request)
