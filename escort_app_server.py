@@ -41,32 +41,22 @@ class myHandler(BaseHTTPRequestHandler):
 
     conn = sqlite3.connect('pennapps.db')
     cursor = conn.cursor()
-    cursor.execute('''select * from user2info;''')
+    rows = cursor.execute('''select * from user2info;''').fetchall()
 
     user2info = {}
 
-    for i in range(2):
-        login_name, real_name, password, ppl_type, phone_number = cursor.fetchone()
-        user2info[login_name] = {"name": str(real_name), "password": str(password), "type": str(ppl_type), "phone": str(phone_number)}
-
-    # user2info = {"gavin":
-    #                  {
-    #                      "name": "Gavin",
-    #                      "password": "123",
-    #                      "type": "student",
-    #                      "phone": "123456789",
-    #                  },
-    #              "dalige":
-    #                  {
-    #                      "name": "Rex",
-    #                      "password": "123",
-    #                      "type": "security",
-    #                      "phone": "123456789",
-    #                  },
-    #              }
+    for row in rows:
+        login_name, real_name, password, ppl_type, phone_number = row
+        user2info[login_name] = {
+            "name": str(real_name),
+            "password": str(password),
+            "type": str(ppl_type),
+            "phone": str(phone_number)
+        }
 
     hash2loc = {"xiaomage":"left bank", "zhong":"summit"}
     pendreq2loc = {"xiaomage":"left bank", "zhong":"summit"}
+    hash2eta = {}
     stu2sec = {}
 
     def parse(self, raw_request):
@@ -127,6 +117,8 @@ class myHandler(BaseHTTPRequestHandler):
             security_hash_id = request[2]
             eta = request[3]
 
+            self.hash2eta[student_hash_id] = eta
+
             print("request %s, stu_id=%s, sec_id=%s" %
                   (5, student_hash_id, security_hash_id))
 
@@ -147,12 +139,12 @@ class myHandler(BaseHTTPRequestHandler):
                 response.append("No")
                 reply_code = 400
         
-        elif request[0] == "6":
-            # 6!stu_hash_id
-
-            student_hash_id = request[1]
-            del self.stu2sec[student_hash_id]
-            response.append("Yes")
+        # elif request[0] == "6":
+        #     # 6!stu_hash_id
+        #
+        #     student_hash_id = request[1]
+        #     del self.stu2sec[student_hash_id]
+        #     response.append("Yes")
 
         elif request[0] == "7":
             # 7!hash_id!location
@@ -175,7 +167,9 @@ class myHandler(BaseHTTPRequestHandler):
                     info_to_student["phone"] = security_info["phone"]
 
                     response.append(str(info_to_student))
-                    response.append("10")
+                    response.append(self.hash2eta[hash_id])
+
+                    del self.stu2sec[hash_id]
                 else:
                     reply_code = 400
                     response.append("No")
