@@ -1,6 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from oslo_config import cfg
 import sys
+import sqlite3
 
 opts = [
     cfg.IntOpt(
@@ -38,36 +39,31 @@ class myHandler(BaseHTTPRequestHandler):
 
     hash2user = {"xiaomage":"xiaomage", "zhong":"zhong"}
 
-    # info {username, password, type, picture ...}
-    user2info = {"gavin":
-                     {
-                         "name": "Gavin",
-                         "password": "123",
-                         "type": "student",
-                         "phone": "123456789",
-                     },
-                 "dalige":
-                     {
-                         "name": "Rex",
-                         "password": "123",
-                         "type": "security",
-                         "phone": "123456789",
-                     },
-                 "xiaomage":
-                     {
-                         "name": "Marcus",
-                         "password": "123",
-                         "type": "student",
-                         "phone": "123456789",
-                     },
-                 "zhong":
-                     {
-                          "name": "Jon",
-                          "password": "123",
-                          "type": "student",
-                          "phone": "123456789",
-                     }
-                 }
+    conn = sqlite3.connect('pennapps.db')
+    cursor = conn.cursor()
+    cursor.execute('''select * from user2info;''')
+
+    user2info = {}
+
+    for i in range(2):
+        login_name, real_name, password, ppl_type, phone_number = cursor.fetchone()
+        user2info[login_name] = {"name": real_name, "password": password, "type": ppl_type, "phone": phone_number}
+
+    # user2info = {"gavin":
+    #                  {
+    #                      "name": "Gavin",
+    #                      "password": "123",
+    #                      "type": "student",
+    #                      "phone": "123456789",
+    #                  },
+    #              "dalige":
+    #                  {
+    #                      "name": "Rex",
+    #                      "password": "123",
+    #                      "type": "security",
+    #                      "phone": "123456789",
+    #                  },
+    #              }
 
     hash2loc = {"xiaomage":"left bank", "zhong":"summit"}
     pendreq2loc = {"xiaomage":"left bank", "zhong":"summit"}
