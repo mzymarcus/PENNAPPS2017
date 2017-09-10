@@ -2,22 +2,30 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from oslo_config import cfg
 import sys
 
-CONF = cfg.CONF
+opts = [
+    cfg.IntOpt(
+        "port",
+        default=50008,
+    ),
+]
 
+CONF = cfg.CONF
+cfg.CONF.register_cli_opts(opts)
+
+CONF(args=sys.argv[1:])
+PORT_NUMBER = CONF.port
 
 # This class will handle any incoming request from
 # a browser 
-
 class pennappserver():
     def start(self):
         try:
-            CONF(args=sys.argv[1:])
-            self.PORT_NUMBER = CONF.port
+
             
             # Create a web server and define the handler to manage the
             # incoming request
-            server = HTTPServer(('', self.PORT_NUMBER), myHandler)
-            print ('Started httpserver on port ' , self.PORT_NUMBER)
+            server = HTTPServer(('', PORT_NUMBER), myHandler)
+            print ('Started httpserver on port ' , PORT_NUMBER)
 
             # Wait forever for incoming http requests
             server.serve_forever()
@@ -28,7 +36,7 @@ class pennappserver():
 
 class myHandler(BaseHTTPRequestHandler):
 
-    hash2user = {}
+    hash2user = {"xiaomage":"xiaomage"}
 
     # info {username, password, type, picture ...}
     user2info = {"gavin":
@@ -47,8 +55,8 @@ class myHandler(BaseHTTPRequestHandler):
                      },
                  }
 
-    hash2loc = {}
-    pendreq2loc = {}
+    hash2loc = {"xiaomage":"left bank"}
+    pendreq2loc = {"xiaomage":"left bank"}
     stu2sec = {}
 
     def parse(self, raw_request):
