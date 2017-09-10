@@ -36,7 +36,7 @@ class pennappserver():
 
 class myHandler(BaseHTTPRequestHandler):
 
-    hash2user = {"xiaomage":"xiaomage"}
+    hash2user = {"xiaomage":"xiaomage", "zhong":"zhong"}
 
     # info {username, password, type, picture ...}
     user2info = {"gavin":
@@ -53,10 +53,24 @@ class myHandler(BaseHTTPRequestHandler):
                          "type": "security",
                          "phone": "123456789",
                      },
+                 "xiaomage":
+                     {
+                         "name": "Marcus",
+                         "password": "123",
+                         "type": "student",
+                         "phone": "123456789",
+                     },
+                 "zhong":
+                     {
+                          "name": "Jon",
+                          "password": "123",
+                          "type": "student",
+                          "phone": "123456789",
+                     }
                  }
 
-    hash2loc = {"xiaomage":"left bank"}
-    pendreq2loc = {"xiaomage":"left bank"}
+    hash2loc = {"xiaomage":"left bank", "zhong":"summit"}
+    pendreq2loc = {"xiaomage":"left bank", "zhong":"summit"}
     stu2sec = {}
 
     def parse(self, raw_request):
