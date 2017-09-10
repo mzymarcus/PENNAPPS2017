@@ -48,7 +48,7 @@ class myHandler(BaseHTTPRequestHandler):
 
     for i in range(2):
         login_name, real_name, password, ppl_type, phone_number = cursor.fetchone()
-        user2info[login_name] = {"name": real_name, "password": password, "type": ppl_type, "phone": phone_number}
+        user2info[login_name] = {"name": str(real_name), "password": str(password), "type": str(ppl_type), "phone": str(phone_number)}
 
     # user2info = {"gavin":
     #                  {
