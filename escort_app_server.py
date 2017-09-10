@@ -1,8 +1,9 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import time
-import hashlib
+from oslo_config import cfg
 
-PORT_NUMBER = 50008
+CONF = cfg.CONF
+
+PORT_NUMBER = CONF.port
 
 # This class will handle any incoming request from
 # a browser 
@@ -10,6 +11,7 @@ PORT_NUMBER = 50008
 class pennappserver():
     def start(self):
         try:
+
             # Create a web server and define the handler to manage the
             # incoming request
             server = HTTPServer(('', PORT_NUMBER), myHandler)

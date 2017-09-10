@@ -22,7 +22,7 @@ request from client and corresponding replies:
     <5> security confirm escort request:
             <5><student hash id><security hash id><estimated time>
         reply:
-            on success: 200 <student info><security location>
+            on success: 200 <student info><student location>
             on failure: 400 <No>
 
     <6> security confirm pickup:
