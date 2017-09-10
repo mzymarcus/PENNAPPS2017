@@ -1,9 +1,9 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from oslo_config import cfg
+import sys
 
 CONF = cfg.CONF
 
-PORT_NUMBER = CONF.port
 
 # This class will handle any incoming request from
 # a browser 
@@ -11,11 +11,13 @@ PORT_NUMBER = CONF.port
 class pennappserver():
     def start(self):
         try:
+            CONF(args=sys.argv[1:])
+            self.PORT_NUMBER = CONF.port
 
             # Create a web server and define the handler to manage the
             # incoming request
-            server = HTTPServer(('', PORT_NUMBER), myHandler)
-            print ('Started httpserver on port ' , PORT_NUMBER)
+            server = HTTPServer(('', self.PORT_NUMBER), myHandler)
+            print ('Started httpserver on port ' , self.PORT_NUMBER)
 
             # Wait forever for incoming http requests
             server.serve_forever()
@@ -181,6 +183,10 @@ class myHandler(BaseHTTPRequestHandler):
                 pickup_location = self.pendreq2loc[student_hash_id]
                 response.append(student_hash_id)
                 response.append(pickup_location)
+
+            if len(response) == 0:
+                response.append("Nothing")
+
         else:
             response.append("No")
             reply_code = 400
