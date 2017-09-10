@@ -37,7 +37,7 @@ class pennappserver():
 
 class myHandler(BaseHTTPRequestHandler):
 
-    hash2user = {"xiaomage":"xiaomage", "zhong":"zhong"}
+    hash2user = {"xiaomage":"xiaomage", "zhongge":"zhongge"}
 
     conn = sqlite3.connect('pennapps.db')
     cursor = conn.cursor()
@@ -54,8 +54,8 @@ class myHandler(BaseHTTPRequestHandler):
             "phone": str(phone_number)
         }
 
-    hash2loc = {"xiaomage":"left bank", "zhong":"summit"}
-    pendreq2loc = {"xiaomage":"left bank", "zhong":"summit"}
+    hash2loc = {"xiaomage":"left bank", "zhongge":"summit"}
+    pendreq2loc = {"xiaomage":"left bank", "zhongge":"summit"}
     hash2eta = {}
     stu2sec = {}
 
