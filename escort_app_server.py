@@ -4,7 +4,6 @@ import sys
 
 CONF = cfg.CONF
 
-PORT_NUMBER = CONF.port
 
 # This class will handle any incoming request from
 # a browser 
@@ -13,10 +12,12 @@ class pennappserver():
     def start(self):
         try:
             CONF(args=sys.argv[1:])
+            self.PORT_NUMBER = CONF.port
+            
             # Create a web server and define the handler to manage the
             # incoming request
-            server = HTTPServer(('', PORT_NUMBER), myHandler)
-            print ('Started httpserver on port ' , PORT_NUMBER)
+            server = HTTPServer(('', self.PORT_NUMBER), myHandler)
+            print ('Started httpserver on port ' , self.PORT_NUMBER)
 
             # Wait forever for incoming http requests
             server.serve_forever()
